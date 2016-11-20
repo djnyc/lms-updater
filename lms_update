@@ -1,0 +1,28 @@
+#!/bin/bash
+
+url="http://www.mysqueezebox.com/update/?version=7.9.0&revision=1&geturl=1&os=deb"
+
+latest_lms=$(wget -q -O - "$url")
+
+store="/tmp/lms-updater"
+
+mkdir -p $store
+cd $store
+
+lms_deb=${latest_lms##*/}
+
+echo "Looking for $lms_deb"
+
+if [ -f $lms_deb  ]
+then
+	echo "Latest file already downloaded."
+else
+	echo "Downloading latest version to $store."
+	wget $latest_lms
+	echo "Attempting to install $lms_deb"
+	echo ""
+	echo "This will reinstall if it is already installed."
+	dpkg -i $lms_deb
+fi
+
+
